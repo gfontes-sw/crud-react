@@ -1,4 +1,4 @@
-export const API_BASE_URL_DEV = "";
+export const API_BASE_URL_DEV = "https://localhost:44315/api/Account/authenticate";
 
 export const API_BASE_URL_STAGE = "";
 
