@@ -1,26 +1,22 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import "./login.scss";
 import "primereact/resources/themes/lara-light-indigo/theme.css"; // primeng theme
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
 import { InputText } from "primereact/inputtext";
 import { useNavigate } from "react-router-dom";
-/* import useAppContext from "../context/LoginContext"; */
-import { useToken } from "../hooks/useToken";
+import { Toast } from "primereact/toast";
 
-import ErrorModal from "../components/ErrorModal";
+import useAppContext from "../context/LoginContext";
 
 const Login = () => {
-  /* const { setLogin } = useAppContext(); */
-
-  const [modalShown, setModalShown] = useState(false);
-
-  const { setToken } = useToken();
-
+  const { setLogin, loginState } = useAppContext();
   const [form, setForm] = useState({
     email: "superadmin@gmail.com",
     password: "123Pa$$word!",
   });
+
+  const myToast = useRef(null);
 
   const navigate = useNavigate();
 
@@ -30,7 +26,10 @@ const Login = () => {
       ...form,
       [name]: value,
     });
-    setModalShown(false);
+  };
+
+  const showToast = (severityValue, summaryValue, detailValue, lifeValue) => {
+    myToast.current.show({ severity: severityValue, summary: summaryValue, detail: detailValue, life: lifeValue });
   };
 
   const handleSubmit = async e => {
@@ -55,11 +54,17 @@ const Login = () => {
       }
     };
     const userToken = await fetchUser();
-    console.log(userToken);
     if (userToken) {
-      setToken(userToken.jwToken);
+      setLogin({
+        isLogged: true,
+        isToken: userToken.jwToken,
+      });
       navigate("/home");
-    } else setModalShown(true);
+    } else {
+      setLogin({
+        error: true,
+      });
+    }
   };
 
   return (
@@ -77,11 +82,18 @@ const Login = () => {
             required
           />
           <div className="button">
-            <Button type="submit" label="Log in" className="mt-2" />
+            <Button
+              type="submit"
+              label="Log in"
+              className="mt-2"
+              onClick={() =>
+                loginState.error && showToast("error", "Error Message", " The Email or Password is incorrect !", 3000)
+              }
+            />
           </div>
         </form>
       </Card>
-      {modalShown && <ErrorModal />}
+      <Toast ref={myToast} />
     </div>
   );
 };

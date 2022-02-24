@@ -1,21 +1,38 @@
+import { Button } from "primereact/button";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useToken } from "../hooks/useToken";
+import useAppContext from "../context/LoginContext";
 
 const Home = () => {
-  const { removeToken } = useToken();
   const navigate = useNavigate();
+  const { loginState, removeToken } = useAppContext();
+
   const handleClick = () => {
     removeToken();
     navigate("/");
   };
 
+  useEffect(() => {
+    if (!loginState.isLogged) {
+      navigate("/");
+    }
+  }, [loginState]);
+
   return (
     <div>
-      <button type="button" onClick={handleClick}>
-        Log out{" "}
-      </button>
+      <div className="title">
+        <h1>Welcome </h1>
+      </div>
+
+      {loginState.isLogged === true && (
+        <div>
+          {" "}
+          <Button type="button" onClick={handleClick}>
+            Log out{" "}
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
-
 export default Home;
