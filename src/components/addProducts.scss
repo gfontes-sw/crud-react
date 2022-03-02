@@ -1,0 +1,59 @@
+@import "../styles/shared";
+
+#addProductContainer {
+  .form-demo .card {
+    min-width: 450px;
+  }
+  .form-demo .card form {
+    margin-top: 5rem;
+    margin-left: 2rem;
+  }
+  .form-demo .card .field {
+    margin-bottom: 1.5rem;
+  }
+  @media screen and (max-width: 960px) {
+    .form-demo .card {
+      width: 80%;
+    }
+  }
+  @media screen and (max-width: 640px) {
+    .form-demo .card {
+      width: 100%;
+      min-width: 0;
+    }
+  }
+
+  .p-fluid .p-inputtext {
+    width: 40%;
+    margin-top: 1rem;
+  }
+
+  .mt-2 {
+    background-color: $color-green;
+    float: right;
+    margin-right: 2rem;
+  }
+
+  .mt-2:hover {
+    background-color: $color-aquamarine;
+  }
+
+  .mt-1 {
+    background-color: $color-gray;
+    margin-right: 10rem;
+    float: right;
+  }
+
+  .m1-1:hover {
+    background-color: $bg-color2;
+  }
+
+  label {
+    font-size: 1rem;
+  }
+
+  .pi {
+    font-size: 2rem;
+    margin-left: 7rem;
+  }
+}

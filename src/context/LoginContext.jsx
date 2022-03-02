@@ -8,6 +8,12 @@ const initialState = {
   isLoading: false,
   error: false,
   isToken: null,
+  /*  userIdentify: "", */
+};
+
+const initialUserData = {
+  email: "",
+  password: "",
 };
 
 const thisState = () => {
@@ -23,9 +29,14 @@ const thisState = () => {
 
 export const LoginProvider = ({ children }) => {
   const [loginState, setLoginState] = useState(thisState());
+  const [dataState, setDataState] = useState(initialUserData);
 
   const setLogin = value => {
     setLoginState(value);
+  };
+
+  const showDataState = value => {
+    setDataState(value);
   };
 
   const removeToken = () => {
@@ -43,13 +54,15 @@ export const LoginProvider = ({ children }) => {
     if (saveToken) {
       setLoginState({ isToken: JSON.parse(saveToken), isLogged: true });
     }
-  }, []);
+  }, [loginState.isToken]);
 
   const contextLoginValues = useMemo(() => {
     return {
       loginState,
       setLogin,
       removeToken,
+      showDataState,
+      dataState,
     };
   }, [loginState]);
 

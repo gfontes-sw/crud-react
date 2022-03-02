@@ -1,0 +1,32 @@
+@import "../styles/shared";
+
+#privateContainer {
+  .p-card .p-card-body {
+    background-color: $color-aquamarine;
+  }
+
+  .welcome .pi {
+    margin-left: 3rem;
+  }
+
+  .title {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .p-button-label {
+    text-align: center;
+    color: #fff;
+    font-size: 24px;
+    white-space: nowrap;
+  }
+
+  .welcome .pi {
+    font-size: 40px;
+  }
+
+  .p-button {
+    background-color: red;
+  }
+}

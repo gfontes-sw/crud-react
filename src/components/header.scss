@@ -1,0 +1,74 @@
+@import "../styles/shared";
+
+#headerContainer {
+  .p-tabview .p-tabview-nav {
+    float: right;
+    background: $color-aquamarine-dark;
+    border: none;
+  }
+
+  .pi {
+    font-size: 1rem;
+  }
+
+  .p-tabview .p-tabview-nav li {
+    margin-right: 1rem;
+  }
+
+  .p-tabview .p-tabview-nav .p-tabview-ink-bar {
+    background-color: white;
+    display: none;
+    height: 0px;
+  }
+
+  .p-tabview .p-tabview-panels {
+    padding: none;
+  }
+
+
+
+  .p-tabview-nav-content {
+    background: $color-aquamarine-dark;
+    /*    background-color: slategrey; */
+  }
+  .products {
+    background-color: $color-white;
+    border-radius: none !important;
+    margin-top: 1rem;
+    color: $color-green;
+  }
+  .p-button-label {
+    color: $color-green;
+  }
+
+  .p-splitbutton {
+    background-color: $color-aquamarine-dark;
+    margin-top: 1rem;
+    display: flex;
+  }
+
+  .p-button {
+    background-color: $color-white;
+    border: none;
+    margin-bottom: 1rem;
+  }
+
+  .p-button:hover {
+    background-color: $color-line;
+  }
+
+  .pi-user:before {
+    color: $color-green;
+  }
+  .pi-chevron-down:before {
+    color: $color-green;
+  }
+
+  /*   .p-button:enabled:hover,
+  .p-button:not(button):not(a):not(.p-disabled):hover {
+  } */
+}
+
+.p-menu.p-menu-overlay {
+width: 16rem;
+}

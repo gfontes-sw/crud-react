@@ -1,0 +1,25 @@
+@import "../styles/shared";
+
+#getProductContainer {
+  .pi-book {
+    font-size: 8rem;
+  }
+  .p-button {
+    float: right;
+    background-color: $color-green;
+    margin-right: 10rem;
+    margin-top: 6rem;
+  }
+  .p-button:hover{
+      background-color: $color-aquamarine;
+  }
+
+.pi {
+    font-size: 3rem;
+    margin-left: 5rem;
+  }
+
+  .p-card .p-card-body {
+    background-color: $color-white;
+  }
+}
