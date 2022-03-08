@@ -9,17 +9,17 @@ import { ThemeProvider } from "styled-components";
 import lightTheme from "../theme/lightTheme";
 
 import AppRouter from "./AppRouter";
-import { LoginProvider } from "../context/LoginContext";
-import { ProductProvider } from "../context/ProductContext";
+import { ProductContextProvider } from "../context/ProductContext";
+import { AuthContextProvider } from "../context/LoginContext";
 
 const App = () => {
   return (
     <ThemeProvider theme={lightTheme}>
-      <LoginProvider>
-        <ProductProvider>
+      <ProductContextProvider>
+        <AuthContextProvider>
           <AppRouter />
-        </ProductProvider>
-      </LoginProvider>
+        </AuthContextProvider>
+      </ProductContextProvider>
     </ThemeProvider>
   );
 };

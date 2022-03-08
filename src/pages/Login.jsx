@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useContext } from "react";
 import "primereact/resources/themes/lara-light-indigo/theme.css"; // primeng theme
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
@@ -7,12 +7,13 @@ import { useNavigate } from "react-router-dom";
 import { Toast } from "primereact/toast";
 
 import saveUser from "../services/saveUser";
-import useAppContext from "../context/LoginContext";
+import AuthContext from "../context/LoginContext";
 
 import "./login.scss";
 
 const Login = () => {
-  const { setLogin, loginState, showDataState } = useAppContext();
+  const authCtx = useContext(AuthContext);
+
   const [form, setForm] = useState({
     email: "superadmin@gmail.com",
     password: "123Pa$$word!",
@@ -37,17 +38,12 @@ const Login = () => {
   const handleSubmit = async e => {
     e.preventDefault();
     const userToken = await saveUser(form);
+    console.log(userToken);
     if (userToken) {
-      setLogin({
-        isLogged: true,
-        isToken: userToken.jwToken,
-      });
-      showDataState(form);
+      authCtx.login(userToken.jwToken, userToken.userName);
       navigate("/private");
     } else {
-      setLogin({
-        error: true,
-      });
+      authCtx.error = true;
     }
   };
 
@@ -72,7 +68,7 @@ const Login = () => {
                 label="Log in"
                 className="mt-2"
                 onClick={() =>
-                  loginState.error && showToast("error", "Error Message", " The Email or Password is incorrect !", 3000)
+                  authCtx.error && showToast("error", "Error Message", " The Email or Password is incorrect !", 3000)
                 }
               />
             </div>

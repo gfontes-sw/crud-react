@@ -1,78 +1,48 @@
-import React, { createContext, useContext, useMemo, useState, useEffect } from "react";
+import React, { createContext, useMemo, useState } from "react";
 import PropTypes from "prop-types";
 
-const LoginContext = createContext({});
-
-const initialState = {
-  isLogged: false,
-  isLoading: false,
+const AuthContext = createContext({
+  token: "",
+  isLoggedIn: false,
   error: false,
-  isToken: null,
-  /*  userIdentify: "", */
-};
+  login: () => {},
+  logout: () => {},
+  userData: "",
+});
 
-const initialUserData = {
-  email: "",
-  password: "",
-};
+export const AuthContextProvider = ({ children }) => {
+  const initialToken = localStorage.getItem("token");
+  const [token, setToken] = useState(initialToken);
+  const [userData, setUserData] = useState("");
 
-const thisState = () => {
-  const gotToken = localStorage.getItem("isToken");
-  if (gotToken) {
+  const userIsLoggedIn = !!token;
+
+  const loginHandler = (isToken, userInfo) => {
+    setToken(isToken);
+    setUserData(userInfo);
+    localStorage.setItem("token", isToken);
+  };
+
+  const logoutHandler = () => {
+    setToken(null);
+    localStorage.removeItem("token");
+  };
+
+  const contextValue = useMemo(() => {
     return {
-      isLogged: true,
-      isToken: gotToken,
+      token,
+      isLoggedIn: userIsLoggedIn,
+      login: loginHandler,
+      logout: logoutHandler,
+      userData,
     };
-  }
-  return initialState;
+  }, [userIsLoggedIn]);
+
+  return <AuthContext.Provider value={contextValue}>{children} </AuthContext.Provider>;
 };
 
-export const LoginProvider = ({ children }) => {
-  const [loginState, setLoginState] = useState(thisState());
-  const [dataState, setDataState] = useState(initialUserData);
+export default AuthContext;
 
-  const setLogin = value => {
-    setLoginState(value);
-  };
-
-  const showDataState = value => {
-    setDataState(value);
-  };
-
-  const removeToken = () => {
-    localStorage.removeItem("isToken");
-  };
-
-  useEffect(() => {
-    if (loginState.isToken) {
-      localStorage.setItem("isToken", JSON.stringify(loginState.isToken));
-    }
-  }, [loginState]);
-
-  useEffect(() => {
-    const saveToken = localStorage.getItem("isToken");
-    if (saveToken) {
-      setLoginState({ isToken: JSON.parse(saveToken), isLogged: true });
-    }
-  }, [loginState.isToken]);
-
-  const contextLoginValues = useMemo(() => {
-    return {
-      loginState,
-      setLogin,
-      removeToken,
-      showDataState,
-      dataState,
-    };
-  }, [loginState]);
-
-  return <LoginContext.Provider value={contextLoginValues}>{children}</LoginContext.Provider>;
-};
-
-const useAppContext = () => useContext(LoginContext);
-
-export default useAppContext;
-
-LoginProvider.propTypes = {
+AuthContextProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };

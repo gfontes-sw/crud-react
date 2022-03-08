@@ -1,62 +1,55 @@
-import React, { useState } from "react";
-import { useForm, Controller } from "react-hook-form";
+import React, { useState, useContext /* , useRef  */ } from "react";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
-import { Dialog } from "primereact/dialog";
-import { classNames } from "primereact/utils";
+/* import { Toast } from "primereact/toast"; */
+/* import { Dialog } from "primereact/dialog"; */
 import { useNavigate } from "react-router-dom";
-import { Card } from "primereact/card";
-import saveProducts from "../services/saveProducts";
 import Header from "./Header";
-import useProductContext from "../context/ProductContext";
+import { saveProducts } from "../services/saveProducts";
+import ProductContext from "../context/ProductContext";
 import "./addProducts.scss";
+import showProducts from "../services/showProducts";
 
 const AddProducts = () => {
-  const { setProduct } = useProductContext();
   const navigate = useNavigate();
-  const [showMessage, setShowMessage] = useState(false);
-  const [formData, setFormData] = useState({});
+  /*   const [showMessage, setShowMessage] = useState(false); */
+
   const defaultValues = {
-    title: "",
+    title: "lol",
     price: 13.5,
     description: "lorem ipsum set",
     image: "https://i.pravatar.cc",
-    category: "electronic",
+    categorty: "electronic",
   };
-  const {
-    control,
-    formState: { errors },
-    handleSubmit,
-    reset,
-  } = useForm({ defaultValues });
+  const [formData, setFormData] = useState(defaultValues);
+  /*  const myToast = useRef(null); */
+  const productCtx = useContext(ProductContext);
 
-  const onSubmit = async data => {
-    const productData = await saveProducts(data);
-    /*  debugger; */
+  /*   const showToast = (severityValue, summaryValue, detailValue, lifeValue) => {
+    myToast.current.show({ severity: severityValue, summary: summaryValue, detail: detailValue, life: lifeValue });
+  }; */
+
+  const handleSubmit = async e => {
+    e.preventDefault();
+    const productData = await saveProducts(formData);
+    console.log("thisProd", productData);
     if (productData) {
-      setProduct({ gotProducts: true, isProducts: { ...data } });
-      setFormData(data);
-      console.log(formData);
-      setShowMessage(true);
+      const allProducts = await showProducts();
+      console.log("allproducts", allProducts);
+      productCtx.addItems(allProducts);
+      productCtx.setGotItems(true);
       navigate("/private/products");
     }
-    console.log(`this data comes from formData ${formData}`);
-    reset();
+    /*  setShowMessage(true); */
+  };
+  const handleChange = e => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    console.log(formData);
   };
 
   const onCancel = () => {
     navigate("/private/products");
   };
-
-  const getFormErrorMessage = name => {
-    return errors[name] && <small className="p-error">{errors[name].message}</small>;
-  };
-
-  const dialogFooter = (
-    <div className="flex justify-content-center">
-      <Button label="OK" className="p-button-text" autoFocus onClick={() => setShowMessage(false)} />
-    </div>
-  );
 
   return (
     <>
@@ -64,122 +57,46 @@ const AddProducts = () => {
       <div id="addProductContainer">
         <div className="form-demo">
           <div className="flex justify-content-center">
-            <Card>
-              <h2 className="pi pi-book">New Product</h2>
-              <Button type="button" label="Cancel" onClick={onCancel} className="mt-1" />
-              <Button type="submit" onClick={onSubmit} label="Create" className="mt-2" />
-            </Card>
             <div className="card">
-              <form onSubmit={handleSubmit(onSubmit)} className="p-fluid">
+              <h5 className="text-center">Register</h5>
+              <form onSubmit={handleSubmit} className="p-fluid">
                 <div className="field">
                   <span className="p-float-label">
-                    <Controller
-                      name="title"
-                      control={control}
-                      rules={{ required: "Please enter a name" }}
-                      render={({ field, fieldState }) => (
-                        <InputText
-                          id={field.name}
-                          {...field}
-                          autoFocus
-                          className={classNames({ "p-invalid": fieldState.invalid })}
-                        />
-                      )}
-                    />
-                    <label htmlFor="name" className={classNames({ "p-error": errors.name })}>
-                      Name *
-                    </label>
+                    <InputText name="title" value={formData.title} onChange={handleChange} />
+                    <label htmlFor="name">Title*</label>
                   </span>
-                  {getFormErrorMessage("name")}
                 </div>
                 <div className="field">
                   <span className="p-float-label p-input-icon-right">
-                    <Controller
-                      name="price"
-                      control={control}
-                      rules={{
-                        required: "Barcode is required.",
-                      }}
-                      render={({ field, fieldState }) => (
-                        <InputText id={field.name} {...field} className={classNames({ "p-invalid": fieldState.invalid })} />
-                      )}
-                    />
-                    <label htmlFor="barcode" className={classNames({ "p-error": !!errors.barcode })}>
-                      Barcode*
-                    </label>
+                    <InputText name="price" value={formData.price} onChange={handleChange} />
+                    <label htmlFor="price">Price*</label>
                   </span>
-                  {getFormErrorMessage("barcode")}
-                </div>
-                <div className="field">
-                  <span className="p-float-label p-input-icon-right">
-                    <Controller
-                      name="image"
-                      control={control}
-                      rules={{
-                        required: "Barcode is required.",
-                      }}
-                      render={({ field, fieldState }) => (
-                        <InputText id={field.name} {...field} className={classNames({ "p-invalid": fieldState.invalid })} />
-                      )}
-                    />
-                    <label htmlFor="barcode" className={classNames({ "p-error": !!errors.barcode })}>
-                      Barcode*
-                    </label>
-                  </span>
-                  {getFormErrorMessage("barcode")}
                 </div>
                 <div className="field">
                   <span className="p-float-label">
-                    <Controller
-                      name="description"
-                      control={control}
-                      rules={{ required: "Description is required." }}
-                      render={({ field, fieldState }) => (
-                        <InputText id={field.name} {...field} className={classNames({ "p-invalid": fieldState.invalid })} />
-                      )}
-                    />
-                    <label htmlFor="description" className={classNames({ "p-error": errors.description })}>
-                      Description *
-                    </label>
+                    <InputText name="description" value={formData.description} onChange={handleChange} />
+                    <label htmlFor="description">Description*</label>
                   </span>
-                  {getFormErrorMessage("description")}
                 </div>
                 <div className="field">
                   <span className="p-float-label">
-                    <Controller
-                      name="category"
-                      control={control}
-                      render={({ field, fieldState }) => (
-                        <InputText id={field.name} {...field} className={classNames({ "p-invalid": fieldState.invalid })} />
-                      )}
-                    />
-                    <label htmlFor="rate" className={classNames({ "p-error": errors.rate })}>
-                      Rate *
-                    </label>
+                    <InputText name="image" value={formData.image} onChange={handleChange} />
+                    <label htmlFor="image">Image</label>
                   </span>
                 </div>
+                <div className="field">
+                  <span className="p-float-label">
+                    <InputText name="categorty" value={formData.categorty} onChange={handleChange} />
+                    <label htmlFor="categorty">Categorty</label>
+                  </span>
+                </div>
+                <Button type="submit" label="Submit" className="mt-2" />
               </form>
+              <Button type="button" label="Cancel" onClick={onCancel} className="mt-1" />
+              {/*  {productCtx.error && showToast("error", "Error Message", " Couldnt sent your request !", 3000)}
+              <Toast ref={myToast} /> */}
             </div>
           </div>
-          {showMessage && (
-            <Dialog
-              visible={showMessage}
-              onHide={() => setShowMessage(false)}
-              position="top"
-              footer={dialogFooter}
-              showHeader={false}
-              breakpoints={{ "960px": "80vw" }}
-              style={{ width: "30vw" }}>
-              <div className="flex justify-content-center flex-column pt-6 px-3">
-                <i className="pi pi-check-circle" style={{ fontSize: "5rem", color: "var(--green-500)" }} />
-                <h5>Product added!</h5>
-                {/*    <p style={{ lineHeight: 1.5, textIndent: "1rem" }}>
-            Your account is registered under name <b>{formData.name}</b> ; it'll be valid next 30 days without activation. Please
-            check <b>{formData.email}</b> for activation instructions.
-          </p> */}
-              </div>
-            </Dialog>
-          )}
         </div>
       </div>
     </>

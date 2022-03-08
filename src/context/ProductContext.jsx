@@ -1,36 +1,46 @@
-import React, { createContext, useContext, useMemo, useState } from "react";
+import React, { createContext, useMemo, useState } from "react";
 import PropTypes from "prop-types";
 
-const ProductContext = createContext({});
-
-const initialState = {
-  gotProducts: false,
-  isLoading: false,
+const ProductContext = createContext({
+  gotItems: false,
+  setGotItems: () => {},
   error: false,
-  isProducts: {},
-};
+  setError: () => {},
+  items: {},
+  addItems: () => {},
+  removeItems: () => {},
+});
 
-export const ProductProvider = ({ children }) => {
-  const [productState, setProductState] = useState(initialState);
+export const ProductContextProvider = ({ children }) => {
+  const [itemState, setItemState] = useState({});
+  const [gotItems, setGotItems] = useState(false);
+  const [error, setError] = useState(false);
 
-  const setProduct = value => {
-    setProductState(value);
+  const getItem = items => {
+    setItemState(items);
+  };
+
+  const removeItem = id => {
+    setItemState(id);
   };
 
   const contextProductValues = useMemo(() => {
     return {
-      productState,
-      setProduct,
+      addItems: getItem,
+      removeItems: removeItem,
+      items: itemState,
+      gotItems,
+      setGotItems,
+      error,
+      setError,
     };
-  }, [productState]);
+  }, [itemState]);
 
   return <ProductContext.Provider value={contextProductValues}>{children}</ProductContext.Provider>;
 };
 
-const useProductContext = () => useContext(ProductContext);
+export default ProductContext;
 
-export default useProductContext;
-
-ProductProvider.propTypes = {
+ProductContextProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };

@@ -1,6 +1,6 @@
-import axios from "axios";
+import { getPrivateApi } from "../api/connections";
 
-const saveProducts = async ({ title, price, description, image, category }) => {
+export const saveProducts = async ({ title, price, description, image, category }) => {
   try {
     const body = {
       title,
@@ -9,13 +9,9 @@ const saveProducts = async ({ title, price, description, image, category }) => {
       image,
       category,
     };
-    const response = await axios.post("https://fakestoreapi.com/products", body);
+    const api = getPrivateApi();
 
-    if (response.status === 200) {
-      return response.data;
-    }
-
-    return false;
+    return await api.post("https://fakestoreapi.com/products", body);
   } catch (error) {
     const showError = error;
     console.error("Unable to save user. ", showError);

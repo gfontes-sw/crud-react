@@ -1,15 +1,14 @@
-import React from "react";
+import React, { useContext } from "react";
 import { TabView, TabPanel } from "primereact/tabview";
 import { SplitButton } from "primereact/splitbutton";
 import { useNavigate } from "react-router-dom";
 import { Button } from "primereact/button";
-/* import PropTypes from "prop-types"; */
-import useAppContext from "../context/LoginContext";
 import "./header.scss";
+import AuthContext from "../context/LoginContext";
 
 const Header = () => {
   const navigate = useNavigate();
-  const { removeToken, loginState, dataState } = useAppContext();
+  const authCtx = useContext(AuthContext);
 
   const handleClick = () => {
     navigate("/private/products");
@@ -18,15 +17,16 @@ const Header = () => {
   const tabHeaderProducts = () => {
     return <Button className="products" icon="pi pi-book" label="Products" onClick={handleClick} />;
   };
-  console.log(loginState);
+
   const tabHeaderUser = options => {
+    console.log(authCtx.userData);
     const items = [
-      { label: dataState.email, icon: "pi pi-user" },
+      { label: `User: ${authCtx.userData}`, icon: "pi pi-user" },
       {
         label: "Logout",
         icon: "pi pi-times",
         command: () => {
-          removeToken();
+          authCtx.logout();
           navigate("/");
         },
       },
@@ -45,8 +45,3 @@ const Header = () => {
 };
 
 export default Header;
-
-/* Header.propTypes = {
-  userData: PropTypes.string.isRequired,
-};
- */
