@@ -15,11 +15,11 @@ const AddProducts = () => {
   /*   const [showMessage, setShowMessage] = useState(false); */
 
   const defaultValues = {
-    title: "lol",
-    price: 13.5,
-    description: "lorem ipsum set",
-    image: "https://i.pravatar.cc",
-    categorty: "electronic",
+    name: "",
+    description: "",
+    barcode: "",
+    rate: "",
+    productCategoryId: "",
   };
   const [formData, setFormData] = useState(defaultValues);
   /*  const myToast = useRef(null); */
@@ -62,32 +62,26 @@ const AddProducts = () => {
               <form onSubmit={handleSubmit} className="p-fluid">
                 <div className="field">
                   <span className="p-float-label">
-                    <InputText name="title" value={formData.title} onChange={handleChange} />
-                    <label htmlFor="name">Title*</label>
+                    <InputText name="barcode" value={formData.barcode} onChange={handleChange} />
+                    <label htmlFor="name">barcode*</label>
                   </span>
                 </div>
                 <div className="field">
                   <span className="p-float-label p-input-icon-right">
-                    <InputText name="price" value={formData.price} onChange={handleChange} />
-                    <label htmlFor="price">Price*</label>
+                    <InputText name="name" value={formData.name} onChange={handleChange} />
+                    <label htmlFor="price">Name*</label>
+                  </span>
+                </div>
+                <div className="field">
+                  <span className="p-float-label">
+                    <InputText name="rate" value={formData.rate} onChange={handleChange} />
+                    <label htmlFor="description">Rate*</label>
                   </span>
                 </div>
                 <div className="field">
                   <span className="p-float-label">
                     <InputText name="description" value={formData.description} onChange={handleChange} />
                     <label htmlFor="description">Description*</label>
-                  </span>
-                </div>
-                <div className="field">
-                  <span className="p-float-label">
-                    <InputText name="image" value={formData.image} onChange={handleChange} />
-                    <label htmlFor="image">Image</label>
-                  </span>
-                </div>
-                <div className="field">
-                  <span className="p-float-label">
-                    <InputText name="categorty" value={formData.categorty} onChange={handleChange} />
-                    <label htmlFor="categorty">Categorty</label>
                   </span>
                 </div>
                 <Button type="submit" label="Submit" className="mt-2" />

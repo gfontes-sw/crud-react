@@ -35,9 +35,6 @@
       "react/forbid-prop-types": [2, { "forbid": ["object"], "checkContextTypes": true, "checkChildContextTypes": true }],
       "react-hooks/rules-of-hooks": "error",
       "react-hooks/exhaustive-deps": 0,
-      "globals": {
-        "fetch": false
-      },
       "prettier/prettier": [
         "error",
         {
