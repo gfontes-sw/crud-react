@@ -5,10 +5,10 @@ import { Button } from "primereact/button";
 /* import { Dialog } from "primereact/dialog"; */
 import { useNavigate } from "react-router-dom";
 import Header from "./Header";
-import { saveProducts } from "../services/saveProducts";
+import postProducts from "../services/postProducts";
 import ProductContext from "../context/ProductContext";
 import "./addProducts.scss";
-import showProducts from "../services/showProducts";
+import getProducts from "../services/getProducts";
 
 const AddProducts = () => {
   const navigate = useNavigate();
@@ -31,10 +31,10 @@ const AddProducts = () => {
 
   const handleSubmit = async e => {
     e.preventDefault();
-    const productData = await saveProducts(formData);
+    const productData = await postProducts(formData);
     console.log("thisProd", productData);
     if (productData) {
-      const allProducts = await showProducts();
+      const allProducts = await getProducts();
       console.log("allproducts", allProducts);
       productCtx.addItems(allProducts);
       productCtx.setGotItems(true);

@@ -1,12 +1,12 @@
 import axios from "axios";
 
-const saveUser = async ({ email, password }) => {
+const authenticateUser = async ({ email, password }) => {
   try {
     const body = {
       email,
       password,
     };
-    const response = await axios.post("https://localhost:44315/api/Account/authenticate", body);
+    const response = await axios.post(process.env.REACT_APP_USER_AUTH, body);
     if (response.status === 200) {
       return response.data.data;
     }
@@ -22,4 +22,4 @@ const saveUser = async ({ email, password }) => {
     return false;
   }
 };
-export default saveUser;
+export default authenticateUser;

@@ -6,7 +6,7 @@ import { InputText } from "primereact/inputtext";
 import { useNavigate } from "react-router-dom";
 import { Toast } from "primereact/toast";
 
-import saveUser from "../services/saveUser";
+import authenticateUser from "../services/authenticateUser";
 import AuthContext from "../context/LoginContext";
 
 import "./login.scss";
@@ -37,7 +37,7 @@ const Login = () => {
 
   const handleSubmit = async e => {
     e.preventDefault();
-    const userToken = await saveUser(form);
+    const userToken = await authenticateUser(form);
     console.log(userToken);
     if (userToken) {
       authCtx.login(userToken.jwToken, userToken.userName);
