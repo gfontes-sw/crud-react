@@ -1,4 +1,4 @@
-import React, { useRef, useState, useContext } from "react";
+import React, { useRef, useState, useContext, useEffect } from "react";
 import "primereact/resources/themes/lara-light-indigo/theme.css"; // primeng theme
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
@@ -13,6 +13,7 @@ import "./login.scss";
 
 const Login = () => {
   const authCtx = useContext(AuthContext);
+  const isLogged = authCtx.isLoggedIn;
 
   const [form, setForm] = useState({
     email: "superadmin@gmail.com",
@@ -46,6 +47,12 @@ const Login = () => {
       authCtx.error = true;
     }
   };
+
+  useEffect(() => {
+    if (isLogged) {
+      navigate("/private");
+    }
+  }, [isLogged]);
 
   return (
     <div id="loginContainer">

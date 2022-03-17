@@ -1,9 +1,9 @@
-import React, { useState, useContext /* , useRef  */ } from "react";
+/* eslint-disable */
+import React, { useState, useContext, useRef } from "react";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
-/* import { Toast } from "primereact/toast"; */
-/* import { Dialog } from "primereact/dialog"; */
 import { useNavigate } from "react-router-dom";
+import { Toast } from "primereact/toast";
 import Header from "./Header";
 import postProducts from "../services/postProducts";
 import ProductContext from "../context/ProductContext";
@@ -16,35 +16,35 @@ const AddProducts = () => {
 
   const defaultValues = {
     name: "",
-    description: "",
     barcode: "",
+    description: "",
     rate: "",
-    productCategoryId: "",
   };
   const [formData, setFormData] = useState(defaultValues);
-  /*  const myToast = useRef(null); */
   const productCtx = useContext(ProductContext);
+  const myToast = useRef(null);
 
-  /*   const showToast = (severityValue, summaryValue, detailValue, lifeValue) => {
+  const showToast = (severityValue, summaryValue, detailValue, lifeValue) => {
     myToast.current.show({ severity: severityValue, summary: summaryValue, detail: detailValue, life: lifeValue });
-  }; */
+  };
 
   const handleSubmit = async e => {
     e.preventDefault();
     const productData = await postProducts(formData);
-    console.log("thisProd", productData);
+    debugger;
     if (productData) {
       const allProducts = await getProducts();
-      console.log("allproducts", allProducts);
-      productCtx.addItems(allProducts);
+      console.log("allproducts", allProducts)
+      debugger;
+      productCtx.addItems(allProducts.data.items);
       productCtx.setGotItems(true);
       navigate("/private/products");
+    } else {
+      productCtx.error = true;
     }
-    /*  setShowMessage(true); */
   };
   const handleChange = e => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    console.log(formData);
   };
 
   const onCancel = () => {
@@ -62,35 +62,41 @@ const AddProducts = () => {
               <form onSubmit={handleSubmit} className="p-fluid">
                 <div className="field">
                   <span className="p-float-label">
-                    <InputText name="barcode" value={formData.barcode} onChange={handleChange} />
-                    <label htmlFor="name">barcode*</label>
+                    <InputText name="name" value={formData.name} onChange={handleChange} required />
+                    <label htmlFor="name">Name*</label>
                   </span>
                 </div>
                 <div className="field">
                   <span className="p-float-label p-input-icon-right">
-                    <InputText name="name" value={formData.name} onChange={handleChange} />
-                    <label htmlFor="price">Name*</label>
+                    <InputText name="barcode" value={formData.barcode} onChange={handleChange} required />
+                    <label htmlFor="barcode">Barcode*</label>
                   </span>
                 </div>
                 <div className="field">
                   <span className="p-float-label">
-                    <InputText name="rate" value={formData.rate} onChange={handleChange} />
-                    <label htmlFor="description">Rate*</label>
-                  </span>
-                </div>
-                <div className="field">
-                  <span className="p-float-label">
-                    <InputText name="description" value={formData.description} onChange={handleChange} />
+                    <InputText name="description" value={formData.description} onChange={handleChange} required />
                     <label htmlFor="description">Description*</label>
                   </span>
                 </div>
-                <Button type="submit" label="Submit" className="mt-2" />
+                <div className="field">
+                  <span className="p-float-label">
+                    <InputText name="rate" value={formData.rate} onChange={handleChange} required />
+                    <label htmlFor="rate">Rate*</label>
+                  </span>
+                </div>
+                <Button
+                  type="submit"
+                  label="Submit"
+                  className="mt-2"
+                  onClick={() =>
+                    productCtx.error && showToast("error", "Error Message", " We couldnt save your product, try again !", 3000)
+                  }
+                />
               </form>
               <Button type="button" label="Cancel" onClick={onCancel} className="mt-1" />
-              {/*  {productCtx.error && showToast("error", "Error Message", " Couldnt sent your request !", 3000)}
-              <Toast ref={myToast} /> */}
             </div>
           </div>
+          <Toast ref={myToast} />
         </div>
       </div>
     </>

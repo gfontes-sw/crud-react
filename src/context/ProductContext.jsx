@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { createContext, useMemo, useState } from "react";
 import PropTypes from "prop-types";
 
@@ -6,18 +7,19 @@ const ProductContext = createContext({
   setGotItems: () => {},
   error: false,
   setError: () => {},
-  items: {},
+  items: [],
   addItems: () => {},
   removeItems: () => {},
 });
 
 export const ProductContextProvider = ({ children }) => {
-  const [itemState, setItemState] = useState({});
+  const [itemState, setItemState] = useState([]);
   const [gotItems, setGotItems] = useState(false);
-  const [error, setError] = useState(false);
 
   const getItem = items => {
-    setItemState(items);
+    if (items) {
+      setItemState(items);
+    }
   };
 
   const removeItem = id => {
@@ -31,8 +33,6 @@ export const ProductContextProvider = ({ children }) => {
       items: itemState,
       gotItems,
       setGotItems,
-      error,
-      setError,
     };
   }, [itemState]);
 

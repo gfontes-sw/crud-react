@@ -1,10 +1,10 @@
 import { getPrivateApi } from "../api/connections";
 
-const postProducts = async ({ name, barcode, description, rate }) => {
+export const updateProduct = async ({ id, name, description, rate }) => {
   try {
     const body = {
+      id,
       name,
-      barcode,
       description,
       rate,
     };
@@ -12,15 +12,14 @@ const postProducts = async ({ name, barcode, description, rate }) => {
 
     const fd = new FormData();
 
+    fd.append("id", body.id);
     fd.append("name", body.name);
     fd.append("description", body.description);
-    fd.append("barcode", body.barcode);
     fd.append("rate", body.rate);
-    return await api.post(`${process.env.REACT_APP_PRODUCT}api/v1/Product/Create`, fd);
+    return await api.put(`${process.env.REACT_APP_PRODUCT}api/v1/Product/Update`, fd);
   } catch (error) {
     const showError = error;
     console.error("Unable to post product. ", showError);
     return false;
   }
 };
-export default postProducts;

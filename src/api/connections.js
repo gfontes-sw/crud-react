@@ -2,7 +2,7 @@ import axios from "axios";
 
 const privateApi = axios.create({
   headers: {
-    "Content-Type": "application/json",
+    "Content-Type": "multipart/form-data",
   },
   timeout: 16000,
 });
@@ -17,7 +17,7 @@ privateApi.interceptors.request.use(async config => {
 export const getPrivateApi = () => {
   return privateApi;
 };
-
+/* 
 const privateFormDataApi = axios.create({
   headers: {
     "Content-Type": "multipart/form-data",
@@ -35,3 +35,4 @@ privateFormDataApi.interceptors.request.use(async config => {
 export const getPrivateFormDataApi = () => {
   return privateFormDataApi;
 };
+ */

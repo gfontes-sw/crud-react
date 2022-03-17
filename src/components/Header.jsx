@@ -9,6 +9,7 @@ import AuthContext from "../context/LoginContext";
 const Header = () => {
   const navigate = useNavigate();
   const authCtx = useContext(AuthContext);
+  const username = localStorage.getItem("userData");
 
   const handleClick = () => {
     navigate("/private/products");
@@ -19,9 +20,8 @@ const Header = () => {
   };
 
   const tabHeaderUser = options => {
-    console.log(authCtx.userData);
     const items = [
-      { label: `User: ${authCtx.userData}`, icon: "pi pi-user" },
+      { label: `User: ${username}`, icon: "pi pi-user" },
       {
         label: "Logout",
         icon: "pi pi-times",
