@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { useState, useContext, useRef } from "react";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
@@ -31,11 +30,9 @@ const AddProducts = () => {
   const handleSubmit = async e => {
     e.preventDefault();
     const productData = await postProducts(formData);
-    debugger;
     if (productData) {
       const allProducts = await getProducts();
-      console.log("allproducts", allProducts)
-      debugger;
+      console.log("allproducts", allProducts);
       productCtx.addItems(allProducts.data.items);
       productCtx.setGotItems(true);
       navigate("/private/products");

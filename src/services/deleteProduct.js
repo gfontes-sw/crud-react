@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { getPrivateApi } from "../api/connections";
 
 export const deleteProducts = async id => {
