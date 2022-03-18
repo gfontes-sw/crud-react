@@ -1,10 +1,12 @@
-import React, { useEffect, useContext, useState } from "react";
+import React, { useEffect, useContext, useState, useRef } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
+import { Toast } from "primereact/toast";
+
 import "./products.scss";
 import GetProducts from "../components/GetProducts";
 import Header from "../components/Header";
@@ -20,6 +22,8 @@ const Products = () => {
   const [editableProduct, setEditableProduct] = useState(null);
   const [productDialog, setProductDialog] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+
+  const toast = useRef(null);
 
   const columns = [
     { field: "name", header: "Name" },
@@ -41,45 +45,30 @@ const Products = () => {
         console.log(response);
         hideDialog();
         getProductsHandler();
+        toast.current.show({ severity: "success", summary: "Successful", detail: "Product Updated", life: 3000 });
       }
     } catch (error) {
       console.log(error);
     }
   };
 
-  const hideDialog = () => {
-    setSubmitted(false);
-    setProductDialog(false);
-  };
-
-  const productDialogFooter = (
-    <>
-      <Button label="Cancel" icon="pi pi-times" className="p-button-text" onClick={hideDialog} />
-      <Button label="Save" icon="pi pi-check" className="p-button-text" onClick={saveProduct} />
-    </>
-  );
-
-  const editProduct = product => {
-    setProductDialog(true);
-    setEditableProduct(product);
+  const deleteProduct = async product => {
+    try {
+      const response = await deleteProducts(product.id);
+      if (response.status === 204) {
+        console.log(response);
+        toast.current.show({ severity: "success", summary: "Successful", detail: "Product Deleted", life: 3000 });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    getProductsHandler();
   };
 
   const getProductsHandler = async () => {
     const allProducts = await getProducts();
     productCtx.addItems(allProducts.data.items);
     productCtx.setGotItems(true);
-  };
-
-  const confirmDeleteProduct = async product => {
-    try {
-      const response = await deleteProducts(product.id);
-      if (response.status === 204) {
-        console.log(response);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-    getProductsHandler();
   };
 
   useEffect(() => {
@@ -90,17 +79,34 @@ const Products = () => {
     setProducts(productCtx.items);
   }, [productCtx]);
 
-  const actionBodyTemplate = rowData => {
-    return (
-      <>
-        <Button icon="pi pi-pencil" className="p-button-rounded p-button-success mr-2" onClick={() => editProduct(rowData)} />
-        <Button icon="pi pi-trash" className="p-button-rounded p-button-warning" onClick={() => confirmDeleteProduct(rowData)} />
-      </>
-    );
+  const hideDialog = () => {
+    setSubmitted(false);
+    setProductDialog(false);
+  };
+
+  const editProduct = product => {
+    setProductDialog(true);
+    setEditableProduct(product);
   };
 
   const onInputChange = (e, key) => {
     setEditableProduct({ ...editableProduct, [key]: e.target.value });
+  };
+
+  const productDialogFooter = (
+    <>
+      <Button label="Cancel" icon="pi pi-times" className="p-button-text" onClick={hideDialog} />
+      <Button label="Save" icon="pi pi-check" className="p-button-text" onClick={saveProduct} />
+    </>
+  );
+
+  const actionBodyTemplate = rowData => {
+    return (
+      <>
+        <Button icon="pi pi-pencil" className="p-button-rounded p-button-success mr-2" onClick={() => editProduct(rowData)} />
+        <Button icon="pi pi-trash" className="p-button-rounded p-button-warning" onClick={() => deleteProduct(rowData)} />
+      </>
+    );
   };
 
   return (
@@ -111,6 +117,7 @@ const Products = () => {
       </div>
       <div id="productsContainer">
         <div className="datatable-filter-demo">
+          <Toast ref={toast} />
           <div className="card">
             <DataTable
               value={products}
